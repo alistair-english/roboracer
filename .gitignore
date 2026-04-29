@@ -12,6 +12,9 @@ log/
 # pixi
 .pixi/
 
+# downloaded AutoDRIVE simulator
+.sim/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

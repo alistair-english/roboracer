@@ -30,7 +30,8 @@ transforms3d = "==0.4.2"
 scripts = ["scripts/pixi_activate.bash", "install/setup.bash"]
 
 [tasks]
-sim = "'./autodrive_simulator/AutoDRIVE Simulator.x86_64'"
+_fetch_sim = "bash scripts/fetch_sim.sh"
+sim = { cmd = "'./.sim/autodrive_simulator/AutoDRIVE Simulator.x86_64'", depends-on = ["_fetch_sim"] }
 update_python_paths = "python3 .vscode/update_python_paths.py"
 _colcon_build = "colcon build"
 _colcon_build_sequential = "colcon build --executor sequential"
