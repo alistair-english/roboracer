@@ -1,0 +1,16 @@
+build:
+  symlink-install: true
+  base-paths: [src]
+  continue-on-error: true
+  cmake-args:
+    - -DCMAKE_BUILD_TYPE=RelWithDebInfo
+    - -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+  event-handlers:
+    - console_cohesion+
+    - console_start_end+
+    - console_package_list+
+    - summary+
+    - log+
+
+test:
+  base-paths: [src]

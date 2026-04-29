@@ -1,0 +1,40 @@
+[workspace]
+name = "roboracer"
+channels = ["robostack-humble", "conda-forge"]
+platforms = ["linux-64"]
+
+[dependencies]
+python = "3.9.*"
+ros-humble-desktop = ">=0.10.0,<0.11"
+colcon-common-extensions = ">=0.3.0,<0.4"
+setuptools = "<=58.2.0"
+ros-humble-tf-transformations = ">=1.0.1,<2"
+
+[pypi-dependencies]
+eventlet = "==0.33.3"
+Flask = "==1.1.1"
+Flask-SocketIO = "==4.1.0"
+python-socketio = "==4.2.0"
+python-engineio = "==3.13.0"
+greenlet = "==1.1.0"
+gevent = "==21.12.0"
+gevent-websocket = "==0.10.1"
+Jinja2 = "==3.0.3"
+itsdangerous = "==2.0.1"
+werkzeug = "==2.0.3"
+attrdict = "==2.0.1"
+opencv-contrib-python = "==4.10.0.84"
+transforms3d = "==0.4.2"
+
+[target.unix.activation]
+scripts = ["scripts/pixi_activate.bash", "install/setup.bash"]
+
+[tasks]
+sim = "'./autodrive_simulator/AutoDRIVE Simulator.x86_64'"
+update_python_paths = "python3 .vscode/update_python_paths.py"
+_colcon_build = "colcon build"
+_colcon_build_sequential = "colcon build --executor sequential"
+build = { depends-on = ["_colcon_build", "update_python_paths"] }
+build_sequential = { depends-on = ["_colcon_build_sequential", "update_python_paths"] }
+test = "colcon test"
+clean = "rm -rf build install log"
