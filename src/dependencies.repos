@@ -1,0 +1,5 @@
+repositories:
+    jig:
+        type: git
+        url: https://github.com/nineyards-robotics/jig.git
+        version: main

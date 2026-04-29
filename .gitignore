@@ -15,6 +15,9 @@ log/
 # downloaded AutoDRIVE simulator
 .sim/
 
+# vcs-imported external ROS deps
+src/deps/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

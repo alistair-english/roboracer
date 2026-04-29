@@ -598,6 +598,7 @@ environments:
       - conda: https://conda.anaconda.org/conda-forge/linux-64/uncrustify-0.74.0-h27087fc_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/unicodedata2-16.0.0-py39h8cd3c5a_0.conda
       - conda: https://conda.anaconda.org/conda-forge/linux-64/utfcpp-4.09-ha770c72_0.conda
+      - conda: https://conda.anaconda.org/conda-forge/noarch/vcstool-0.3.0-pyhd8ed1ab_0.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/vtk-9.1.0-qt_py39h105b9e9_211.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/x264-1!164.3095-h166bdaf_2.tar.bz2
       - conda: https://conda.anaconda.org/conda-forge/linux-64/x265-3.5-h924138e_3.tar.bz2
@@ -9862,6 +9863,19 @@ packages:
   purls: []
   size: 14226
   timestamp: 1767012219987
+- conda: https://conda.anaconda.org/conda-forge/noarch/vcstool-0.3.0-pyhd8ed1ab_0.tar.bz2
+  sha256: ec3085cf6f19a8b396106bb818f58dcc007db641b30651de803c2085d2304d02
+  md5: df3532b78514a3bf74707b3ba646a866
+  depends:
+  - python >=3.6
+  - pyyaml
+  - setuptools
+  license: Apache-2.0
+  license_family: Apache
+  purls:
+  - pkg:pypi/vcstool?source=hash-mapping
+  size: 33393
+  timestamp: 1628498742394
 - conda: https://conda.anaconda.org/conda-forge/linux-64/vtk-9.1.0-qt_py39h105b9e9_211.tar.bz2
   sha256: b20bc83c9ec01790c329ea8b17fc3a63bbb8fe9174c6ab926443564b95fb34d5
   md5: 9d8e4da9652a9363a9d8223119a6cdd4

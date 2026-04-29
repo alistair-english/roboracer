@@ -9,6 +9,7 @@ ros-humble-desktop = ">=0.10.0,<0.11"
 colcon-common-extensions = ">=0.3.0,<0.4"
 setuptools = "<=58.2.0"
 ros-humble-tf-transformations = ">=1.0.1,<2"
+vcstool = "*"
 
 [pypi-dependencies]
 eventlet = "==0.33.3"
@@ -32,6 +33,7 @@ scripts = ["scripts/pixi_activate.bash", "install/setup.bash"]
 [tasks]
 _fetch_sim = "bash scripts/fetch_sim.sh"
 sim = { cmd = "'./.sim/autodrive_simulator/AutoDRIVE Simulator.x86_64'", depends-on = ["_fetch_sim"] }
+import = "mkdir -p src/deps && vcs import src/deps < src/dependencies.repos"
 update_python_paths = "python3 .vscode/update_python_paths.py"
 _colcon_build = "colcon build"
 _colcon_build_sequential = "colcon build --executor sequential"
