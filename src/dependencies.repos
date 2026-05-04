@@ -3,3 +3,7 @@ repositories:
         type: git
         url: https://github.com/nineyards-robotics/jig.git
         version: main
+    clingwrap:
+        type: git
+        url: https://github.com/greenforge-labs/clingwrap.git
+        version: main
