@@ -1,10 +1,16 @@
 {
     "python.analysis.typeCheckingMode": "standard",
     "python.autoComplete.extraPaths": [
-        "install/autodrive_roboracer/lib/python3.9/site-packages"
+        "install/autodrive_roboracer/lib/python3.11/site-packages",
+        "install/jig/lib/python3.11/site-packages",
+        "install/jig_cli/lib/python3.11/site-packages",
+        "install/jig_example/lib/python3.11/site-packages"
     ],
     "python.analysis.extraPaths": [
-        "install/autodrive_roboracer/lib/python3.9/site-packages"
+        "install/autodrive_roboracer/lib/python3.11/site-packages",
+        "install/jig/lib/python3.11/site-packages",
+        "install/jig_cli/lib/python3.11/site-packages",
+        "install/jig_example/lib/python3.11/site-packages"
     ],
     "files.associations": {
         "cctype": "cpp",
