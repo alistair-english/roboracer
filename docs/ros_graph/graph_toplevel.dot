@@ -1,0 +1,51 @@
+digraph ROS2TopLevel {
+  rankdir=LR;
+  node [shape=box];
+
+  // Root Namespace Nodes
+  "/autodrive_bridge" [label="/autodrive_bridge\n(autodrive_roboracer)", style=filled, fillcolor=lightyellow];
+  "/autodrive_bridge__tf_broadcaster" [label="TF Broadcaster", shape=ellipse, style=filled, fillcolor=lightsalmon, fontsize=9, width=0.6, height=0.3];
+  "/autodrive_bridge" -> "/autodrive_bridge__tf_broadcaster" [arrowhead=none, style=solid, color=grey, penwidth=0.5];
+
+  // Shared Topics
+  "/autodrive/roboracer_1/throttle" [label="/autodrive/roboracer_1/throttle\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/steering" [label="/autodrive/roboracer_1/steering\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/left_encoder" [label="/autodrive/roboracer_1/left_encoder\n[sensor_msgs/msg/JointState]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/right_encoder" [label="/autodrive/roboracer_1/right_encoder\n[sensor_msgs/msg/JointState]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/ips" [label="/autodrive/roboracer_1/ips\n[geometry_msgs/msg/Point]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/imu" [label="/autodrive/roboracer_1/imu\n[sensor_msgs/msg/Imu]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/odom" [label="/autodrive/roboracer_1/odom\n[nav_msgs/msg/Odometry]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/lidar" [label="/autodrive/roboracer_1/lidar\n[sensor_msgs/msg/LaserScan]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/front_camera" [label="/autodrive/roboracer_1/front_camera\n[sensor_msgs/msg/Image]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/lap_count" [label="/autodrive/roboracer_1/lap_count\n[std_msgs/msg/Int32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/lap_time" [label="/autodrive/roboracer_1/lap_time\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/last_lap_time" [label="/autodrive/roboracer_1/last_lap_time\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/best_lap_time" [label="/autodrive/roboracer_1/best_lap_time\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/collision_count" [label="/autodrive/roboracer_1/collision_count\n[std_msgs/msg/Int32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/throttle_command" [label="/autodrive/roboracer_1/throttle_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/steering_command" [label="/autodrive/roboracer_1/steering_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/reset_command" [label="/autodrive/reset_command\n[std_msgs/msg/Bool]", shape=ellipse, style=filled, fillcolor=lightgreen];
+
+  // Topic Edges
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/throttle" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/steering" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/left_encoder" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/right_encoder" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/ips" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/imu" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/odom" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/lidar" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/front_camera" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/lap_count" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/lap_time" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/last_lap_time" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/best_lap_time" [label="publishes"];
+  "/autodrive_bridge" -> "/autodrive/roboracer_1/collision_count" [label="publishes"];
+  "/autodrive/roboracer_1/throttle_command" -> "/autodrive_bridge" [label="subscribed by"];
+  "/autodrive/roboracer_1/steering_command" -> "/autodrive_bridge" [label="subscribed by"];
+  "/autodrive/reset_command" -> "/autodrive_bridge" [label="subscribed by"];
+
+  // Service Edges
+
+  // Action Edges
+}

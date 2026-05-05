@@ -71,3 +71,6 @@ build = { depends-on = ["_colcon_build", "update_python_paths"] }
 build_sequential = { depends-on = ["_colcon_build_sequential", "update_python_paths"] }
 test = "colcon test"
 clean = "rm -rf build install log"
+_breadcrumb_graph = "breadcrumb src/racer/launch/racer.launch.py -o docs/ros_graph/graph.dot --graph-type grouped_and_full_system"
+_dot_to_svg = "bash -c 'for f in docs/ros_graph/*.dot; do dot -Tsvg \"$f\" -o \"${f%.dot}.svg\"; done'"
+update_ros_graph_diagram = { depends-on = ["_breadcrumb_graph", "_dot_to_svg"] }

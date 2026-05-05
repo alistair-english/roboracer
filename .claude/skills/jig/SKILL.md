@@ -1,6 +1,6 @@
 ---
 name: jig
-description: Use when creating, editing, or building a ROS 2 package in this workspace - jig is the convention used here for declarative ROS 2 lifecycle nodes via interface.yaml + auto-generated session scaffolding. Triggers on "ROS node", "ROS package", interface.yaml, jig_auto_package, *Session subclasses, on_configure callbacks, or when files under nodes/<name>/ are involved.
+description: Use when creating, editing, or building a ROS 2 package in this workspace - jig is the convention used here for declarative ROS 2 lifecycle nodes via interface.yaml + auto-generated session scaffolding, and also wraps launch-only / config-only / metapackages via the same `jig_auto_package()` macro. Triggers on "ROS node", "ROS package", interface.yaml, jig_auto_package, *Session subclasses, on_configure callbacks, or when files under nodes/<name>/ are involved.
 ---
 
 # jig
@@ -9,35 +9,38 @@ Jig is the in-repo convention for ROS 2 lifecycle nodes. Source: `src/deps/jig/`
 
 Jig turns one `interface.yaml` per node into a generated `Session` struct + lifecycle base class, so user code is just free functions that take `std::shared_ptr<Session>` (C++) or a `Session` dataclass (Python). The user never subclasses `LifecycleNode`.
 
-## Package layout (mandatory)
+## Package layout
 
 ```
 my_package/
-├── nodes/
+├── nodes/                           # optional - omit for launch/config/meta packages
 │   └── my_node/
-│       ├── interface.yaml           # required
+│       ├── interface.yaml           # required if node dir exists
 │       ├── my_node.hpp              # C++ only
 │       └── my_node.{cpp,py}         # language picked by extension
 ├── launch/                          # optional, auto-installed
 ├── config/                          # optional, auto-installed
+├── interfaces/                      # optional, top-level shared interface.yaml files
 ├── CMakeLists.txt
 └── package.xml
 ```
 
-`nodes/<dir_name>/` drives everything. The directory name (`my_node`) becomes the executable; `MyNode`/`MyNodeBase`/`MyNodeSession` are the generated PascalCase types. Plugin name is `${PROJECT_NAME}::${NodeName}`.
+When present, `nodes/<dir_name>/` drives everything: the directory name (`my_node`) becomes the executable; `MyNode`/`MyNodeBase`/`MyNodeSession` are the generated PascalCase types. Plugin name is `${PROJECT_NAME}::${NodeName}`.
+
+When `nodes/` is **absent**, `jig_auto_package()` is a thin wrapper around `ament_auto_package()` — code-gen, library/executable creation, and component registration are all skipped. It still installs `launch/`, `config/`, anything in `INSTALL_TO_SHARE`, and any top-level `interfaces/*.yaml`. Use this for launch-only, config-only, shared-interface, and metapackages.
 
 ## CMakeLists.txt
 
-Node packages — exactly:
+Node packages, launch-only packages, config-only packages, metapackages — all the same:
 ```cmake
 cmake_minimum_required(VERSION 3.22)
 project(my_package)
 find_package(jig REQUIRED)
 jig_auto_package()
 ```
-Add `jig_auto_package(INSTALL_TO_SHARE maps rviz)` for extra share dirs.
+Add `jig_auto_package(INSTALL_TO_SHARE maps rviz)` for extra share dirs. The macro adapts based on whether `nodes/` exists.
 
-Interface-only packages — exactly:
+Interface-only packages (msg/srv/action definitions) — exactly:
 ```cmake
 cmake_minimum_required(VERSION 3.22)
 project(my_interfaces)
@@ -48,7 +51,7 @@ Drop `.msg`/`.srv`/`.action` into `msg/`, `srv/`, `action/`. Deps come from `pac
 
 ## package.xml essentials
 
-`<depend>jig</depend>` plus `rclcpp` and/or `rclpy` and every msg/srv/action package referenced. `<build_type>ament_cmake</build_type>` even for Python-only nodes.
+`<depend>jig</depend>` and `<build_type>ament_cmake</build_type>` (even for Python-only nodes). For node packages also add `rclcpp` and/or `rclpy` and every msg/srv/action package referenced. Launch-only / config-only / metapackages just need `jig` plus whatever runtime packages they bring up.
 
 ## interface.yaml
 
