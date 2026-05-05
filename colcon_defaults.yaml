@@ -5,6 +5,11 @@ build:
   cmake-args:
     - -DCMAKE_BUILD_TYPE=RelWithDebInfo
     - -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    # Retain link directories in INSTALL_RPATH on every target. Without this,
+    # CMake strips the build-time RPATH on install, leaving rosidl-generated
+    # typesupport .so files unable to find their conda-env-shipped siblings
+    # (LD_LIBRARY_PATH does not include the conda lib dir under pixi).
+    - -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE
   event-handlers:
     - console_cohesion+
     - console_start_end+
