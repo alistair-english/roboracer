@@ -1,0 +1,88 @@
+parameters:
+    n_tentacles:
+        type: int
+        default_value: 21
+        description: "Number of candidate arcs evenly spaced over [-max_steer, +max_steer]. Odd values keep a centered straight-ahead arc."
+        validation:
+            gt<>: [1]
+    max_steer_rad:
+        type: double
+        default_value: 0.5236
+        description: "Absolute physical steering angle limit (rad). Tentacles span [-max_steer, +max_steer], and the [-1, 1] steering_command output is δ/max_steer. Must match the simulator/vehicle's actual max angle (AutoDRIVE-RoboRacer: 0.5236 rad ≈ 30°)."
+        validation:
+            gt<>: [0.0]
+    wheelbase:
+        type: double
+        default_value: 0.324
+        description: "Bicycle-model wheelbase L (m) used to convert steering δ to curvature κ = tan(δ)/L."
+        validation:
+            gt<>: [0.0]
+    horizon:
+        type: double
+        default_value: 3.0
+        description: "Arc-length horizon (m) each tentacle is evaluated to."
+        validation:
+            gt<>: [0.0]
+    arc_step:
+        type: double
+        default_value: 0.1
+        description: "Arc-length sampling step (m) along each tentacle."
+        validation:
+            gt<>: [0.0]
+    safety_radius:
+        type: double
+        default_value: 0.2
+        description: "Inflate walls by this radius (m). A tentacle sample within this distance of any wall segment counts as a collision and truncates the arc."
+        validation:
+            gt<>: [0.0]
+    curvature_penalty:
+        type: double
+        default_value: 0.3
+        description: "Score = clear_length * (1 - α * |κ|/κ_max). Higher α biases selection toward straighter arcs."
+        validation:
+            bounds<>: [0.0, 1.0]
+    min_throttle:
+        type: double
+        default_value: 0.1
+        description: "Throttle output (Float32, unitless) at full steer."
+    max_throttle:
+        type: double
+        default_value: 0.4
+        description: "Throttle output (Float32, unitless) at zero steer. Linearly interpolated by |κ|/κ_max."
+    debug_marker_lifetime_sec:
+        type: double
+        default_value: 0.2
+        description: "Lifetime of debug visualization markers so stale arcs clear if the node stops."
+        validation:
+            gt<>: [0.0]
+
+subscribers:
+    - topic: walls
+      type: racer_interfaces/msg/WallSegmentArray
+      qos:
+        history: 5
+        reliability: RELIABLE
+
+publishers:
+    - topic: steering_command
+      type: std_msgs/msg/Float32
+      qos:
+        history: 5
+        reliability: RELIABLE
+    - topic: throttle_command
+      type: std_msgs/msg/Float32
+      qos:
+        history: 5
+        reliability: RELIABLE
+    - topic: debug/tentacles
+      field_name: debug_tentacles
+      type: visualization_msgs/msg/MarkerArray
+      qos:
+        history: 5
+        reliability: RELIABLE
+    - topic: debug/selected
+      field_name: debug_selected
+      type: visualization_msgs/msg/MarkerArray
+      qos:
+        history: 5
+        reliability: RELIABLE

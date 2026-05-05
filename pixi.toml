@@ -74,3 +74,4 @@ clean = "rm -rf build install log"
 _breadcrumb_graph = "breadcrumb src/racer/launch/racer.launch.py -o docs/ros_graph/graph.dot --graph-type grouped_and_full_system"
 _dot_to_svg = "bash -c 'for f in docs/ros_graph/*.dot; do dot -Tsvg \"$f\" -o \"${f%.dot}.svg\"; done'"
 update_ros_graph_diagram = { depends-on = ["_breadcrumb_graph", "_dot_to_svg"] }
+kill_ros = "pkill -9 -f ros || true"

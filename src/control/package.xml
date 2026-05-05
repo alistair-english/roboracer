@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>control</name>
+  <version>0.0.0</version>
+  <description>Local-frame control nodes for the racer stack (tentacles arc-fan planner).</description>
+  <maintainer email="hello@alistairenglish.com">Alistair English</maintainer>
+  <license>Apache 2.0</license>
+
+  <depend>rclcpp</depend>
+  <depend>jig</depend>
+
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <depend>racer_interfaces</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
