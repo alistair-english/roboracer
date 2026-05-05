@@ -14,6 +14,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'launch'), glob('launch/*.launch.py')), # Launch files
         (os.path.join('share', package_name, 'rviz'), glob('rviz/*.rviz')), # RViz configuration files
+        (os.path.join('share', package_name, 'interfaces'), glob('interfaces/*.yaml')), # jig/breadcrumb node interface definitions
     ],
     install_requires=['setuptools'],
     zip_safe=True,

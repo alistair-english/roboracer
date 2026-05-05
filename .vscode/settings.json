@@ -2,6 +2,9 @@
     "python.analysis.typeCheckingMode": "standard",
     "python.autoComplete.extraPaths": [
         "install/autodrive_roboracer/lib/python3.11/site-packages",
+        "install/breadcrumb/lib/python3.11/site-packages",
+        "install/breadcrumb_example/lib/python3.11/site-packages",
+        "install/breadcrumb_example_interfaces/lib/python3.11/site-packages",
         "install/clingwrap/lib/python3.11/site-packages",
         "install/jig/lib/python3.11/site-packages",
         "install/jig_cli/lib/python3.11/site-packages",
@@ -9,6 +12,9 @@
     ],
     "python.analysis.extraPaths": [
         "install/autodrive_roboracer/lib/python3.11/site-packages",
+        "install/breadcrumb/lib/python3.11/site-packages",
+        "install/breadcrumb_example/lib/python3.11/site-packages",
+        "install/breadcrumb_example_interfaces/lib/python3.11/site-packages",
         "install/clingwrap/lib/python3.11/site-packages",
         "install/jig/lib/python3.11/site-packages",
         "install/jig_cli/lib/python3.11/site-packages",

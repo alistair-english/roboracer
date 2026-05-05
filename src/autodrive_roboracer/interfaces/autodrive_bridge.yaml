@@ -1,0 +1,156 @@
+# Interface definition for the AutoDRIVE <-> ROS 2 bridge node.
+# Bridges a Socket.IO connection to the AutoDRIVE simulator (port 4567)
+# into ROS 2 topics for vehicle telemetry, sensor data, and control commands.
+# Source: autodrive_roboracer/autodrive_bridge.py
+
+node:
+  name: autodrive_bridge
+  package: autodrive_roboracer
+
+# All user-defined publishers/subscribers share the same QoS profile,
+# constructed in autodrive_bridge.main():
+#   QoSProfile(history=KEEP_LAST, depth=1, reliability=RELIABLE, durability=VOLATILE)
+
+publishers:
+  # Actuator feedback (echo of latest applied throttle/steering, range [-1, 1]).
+  - topic: /autodrive/roboracer_1/throttle
+    type: std_msgs/msg/Float32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  - topic: /autodrive/roboracer_1/steering
+    type: std_msgs/msg/Float32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # Wheel encoders (rear axle) reported as JointState with a single position entry.
+  - topic: /autodrive/roboracer_1/left_encoder
+    type: sensor_msgs/msg/JointState
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  - topic: /autodrive/roboracer_1/right_encoder
+    type: sensor_msgs/msg/JointState
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # Indoor Positioning System (XYZ position in the world frame).
+  - topic: /autodrive/roboracer_1/ips
+    type: geometry_msgs/msg/Point
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # IMU mounted on the vehicle body.
+  - topic: /autodrive/roboracer_1/imu
+    type: sensor_msgs/msg/Imu
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # Fused odometry in frame_id 'world', child_frame_id 'roboracer_1'.
+  - topic: /autodrive/roboracer_1/odom
+    type: nav_msgs/msg/Odometry
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # 2D LIDAR scan (1080 beams, +-135 deg, 0.06-10 m range).
+  - topic: /autodrive/roboracer_1/lidar
+    type: sensor_msgs/msg/LaserScan
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # Forward-facing camera (192x108 RGB).
+  - topic: /autodrive/roboracer_1/front_camera
+    type: sensor_msgs/msg/Image
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # Race telemetry.
+  - topic: /autodrive/roboracer_1/lap_count
+    type: std_msgs/msg/Int32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  - topic: /autodrive/roboracer_1/lap_time
+    type: std_msgs/msg/Float32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  - topic: /autodrive/roboracer_1/last_lap_time
+    type: std_msgs/msg/Float32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  - topic: /autodrive/roboracer_1/best_lap_time
+    type: std_msgs/msg/Float32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  - topic: /autodrive/roboracer_1/collision_count
+    type: std_msgs/msg/Int32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # Coordinate transforms broadcast each simulator tick via tf2_ros::TransformBroadcaster.
+  # Frames: world -> roboracer_1 -> {left_encoder, right_encoder, ips, imu, lidar,
+  #         front_camera, front_left_wheel, front_right_wheel, rear_left_wheel,
+  #         rear_right_wheel}.
+  # TransformBroadcaster uses the rclpy default publisher QoS (KEEP_LAST(100), RELIABLE).
+  - topic: /tf
+    type: tf2_msgs/msg/TFMessage
+    qos:
+      history: 100
+      reliability: RELIABLE
+      durability: VOLATILE
+
+subscribers:
+  # Throttle command in [-1, 1]; rounded to 3 decimal places before forwarding.
+  - topic: /autodrive/roboracer_1/throttle_command
+    type: std_msgs/msg/Float32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # Steering command in [-1, 1]; rounded to 3 decimal places before forwarding.
+  - topic: /autodrive/roboracer_1/steering_command
+    type: std_msgs/msg/Float32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # Soft-reset trigger forwarded to the simulator.
+  - topic: /autodrive/reset_command
+    type: std_msgs/msg/Bool
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE

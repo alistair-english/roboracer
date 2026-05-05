@@ -1,0 +1,36 @@
+# Interface definition for the keyboard teleoperation node.
+# Reads keys from stdin and publishes throttle/steering/reset commands
+# to the AutoDRIVE bridge.
+# Source: autodrive_roboracer/teleop_keyboard.py
+
+node:
+  name: teleop_keyboard
+  package: autodrive_roboracer
+
+# Publishers are created with QoSProfile(depth=1); the remaining fields
+# fall back to rclpy defaults (RELIABLE, VOLATILE).
+
+publishers:
+  # Throttle command in [-1, 1] (DRIVE_LIMIT=1.0, DRIVE_STEP_SIZE=0.2).
+  - topic: /autodrive/roboracer_1/throttle_command
+    type: std_msgs/msg/Float32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # Steering command in [-1, 1] (STEER_LIMIT=1.0, STEER_STEP_SIZE=0.2).
+  - topic: /autodrive/roboracer_1/steering_command
+    type: std_msgs/msg/Float32
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
+
+  # Soft-reset trigger; pulsed True for one tick on 'r'.
+  - topic: /autodrive/reset_command
+    type: std_msgs/msg/Bool
+    qos:
+      history: 1
+      reliability: RELIABLE
+      durability: VOLATILE
