@@ -8,7 +8,6 @@
 #include <vector>
 
 #include <geometry_msgs/msg/point.hpp>
-#include <geometry_msgs/msg/point32.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <visualization_msgs/msg/marker.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
@@ -118,14 +117,6 @@ std::vector<std::vector<Vec2>> extract_runs(
     return runs;
 }
 
-geometry_msgs::msg::Point32 to_point32(Vec2 v) {
-    geometry_msgs::msg::Point32 p;
-    p.x = v.x;
-    p.y = v.y;
-    p.z = 0.0f;
-    return p;
-}
-
 geometry_msgs::msg::Point to_point(Vec2 v) {
     geometry_msgs::msg::Point p;
     p.x = v.x;
@@ -189,8 +180,8 @@ void on_scan(std::shared_ptr<Session> sn, sensor_msgs::msg::LaserScan::ConstShar
     walls.segments.reserve(segments.size());
     for (const auto& s : segments) {
         racer_interfaces::msg::WallSegment w;
-        w.start = to_point32(s.start);
-        w.end = to_point32(s.end);
+        w.start = to_point(s.start);
+        w.end = to_point(s.end);
         walls.segments.push_back(w);
     }
     sn->publishers.walls->publish(walls);
