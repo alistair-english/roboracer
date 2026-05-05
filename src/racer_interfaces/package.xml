@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>racer</name>
+  <name>racer_interfaces</name>
   <version>0.0.0</version>
-  <description>Top-level entry point for the racer system.</description>
+  <description>Custom ROS 2 message definitions for the racer stack.</description>
   <maintainer email="hello@alistairenglish.com">Alistair English</maintainer>
   <license>Apache 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-
   <depend>jig</depend>
-  <depend>clingwrap</depend>
 
-  <exec_depend>autodrive_roboracer</exec_depend>
-  <exec_depend>perception</exec_depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+
+  <member_of_group>rosidl_interface_packages</member_of_group>
 
   <export>
     <build_type>ament_cmake</build_type>

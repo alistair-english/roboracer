@@ -22,3 +22,5 @@ src/deps/
 __pycache__/
 *.py[cod]
 *$py.class
+
+.cache/

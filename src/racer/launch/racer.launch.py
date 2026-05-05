@@ -9,4 +9,11 @@ def generate_launch_description():
         executable="autodrive_bridge",
     )
 
+    with l.namespace("perception"):
+        l.node(
+            package="perception",
+            executable="wall_extractor",
+            remappings={"scan": "/autodrive/roboracer_1/lidar"},
+        )
+
     return l

@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>racer</name>
+  <name>perception</name>
   <version>0.0.0</version>
-  <description>Top-level entry point for the racer system.</description>
+  <description>Lidar perception for the racer stack: wall extraction via split-and-merge.</description>
   <maintainer email="hello@alistairenglish.com">Alistair English</maintainer>
   <license>Apache 2.0</license>
 
-  <buildtool_depend>ament_cmake</buildtool_depend>
-
+  <depend>rclcpp</depend>
   <depend>jig</depend>
-  <depend>clingwrap</depend>
 
-  <exec_depend>autodrive_roboracer</exec_depend>
-  <exec_depend>perception</exec_depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <depend>racer_interfaces</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

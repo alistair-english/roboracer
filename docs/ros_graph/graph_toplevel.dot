@@ -2,6 +2,14 @@ digraph ROS2TopLevel {
   rankdir=LR;
   node [shape=box];
 
+  subgraph cluster_perception {
+    label="perception";
+    style=filled;
+    fillcolor=lightgrey;
+
+    "perception" [label="perception\n(1 node)", style=filled, fillcolor=lightblue];
+  }
+
   // Root Namespace Nodes
   "/autodrive_bridge" [label="/autodrive_bridge\n(autodrive_roboracer)", style=filled, fillcolor=lightyellow];
   "/autodrive_bridge__tf_broadcaster" [label="TF Broadcaster", shape=ellipse, style=filled, fillcolor=lightsalmon, fontsize=9, width=0.6, height=0.3];
@@ -35,6 +43,7 @@ digraph ROS2TopLevel {
   "/autodrive_bridge" -> "/autodrive/roboracer_1/imu" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/odom" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/lidar" [label="publishes"];
+  "/autodrive/roboracer_1/lidar" -> "perception" [label="subscribed by"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/front_camera" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/lap_count" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/lap_time" [label="publishes"];

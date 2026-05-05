@@ -26,6 +26,16 @@ digraph ROS2Graph {
     "/autodrive_bridge" -> "/autodrive_bridge__tf_broadcaster" [arrowhead=none, style=solid, color=grey, penwidth=0.5];
   }
 
+  subgraph cluster__perception_wall_extractor {
+    label="/perception/wall_extractor";
+    style=filled;
+    fillcolor=lightgrey;
+
+    "/perception/wall_extractor" [label="/perception/wall_extractor\n(perception)", style=filled, fillcolor=lightblue];
+    "/perception/walls" [label="/perception/walls\n[racer_interfaces/msg/WallSegmentArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
+    "/perception/debug/walls" [label="/perception/debug/walls\n[visualization_msgs/msg/MarkerArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  }
+
   // Shared Topics
   "/autodrive/roboracer_1/throttle_command" [label="/autodrive/roboracer_1/throttle_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
   "/autodrive/roboracer_1/steering_command" [label="/autodrive/roboracer_1/steering_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
@@ -40,6 +50,7 @@ digraph ROS2Graph {
   "/autodrive_bridge" -> "/autodrive/roboracer_1/imu" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/odom" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/lidar" [label="publishes"];
+  "/autodrive/roboracer_1/lidar" -> "/perception/wall_extractor" [label="subscribed by"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/front_camera" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/lap_count" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/lap_time" [label="publishes"];
@@ -49,6 +60,8 @@ digraph ROS2Graph {
   "/autodrive/roboracer_1/throttle_command" -> "/autodrive_bridge" [label="subscribed by"];
   "/autodrive/roboracer_1/steering_command" -> "/autodrive_bridge" [label="subscribed by"];
   "/autodrive/reset_command" -> "/autodrive_bridge" [label="subscribed by"];
+  "/perception/wall_extractor" -> "/perception/walls" [label="publishes"];
+  "/perception/wall_extractor" -> "/perception/debug/walls" [label="publishes"];
 
   // Service Edges
 

@@ -1,0 +1,30 @@
+digraph ROS2Group_perception {
+  rankdir=LR;
+  node [shape=box];
+  label="Group: perception";
+  labelloc=t;
+
+  subgraph cluster_perception {
+    label="perception";
+    style=filled;
+    fillcolor=lightgrey;
+
+    // Group Nodes
+    "/perception/wall_extractor" [label="/perception/wall_extractor\n(perception)", style=filled, fillcolor=lightblue];
+
+    // Internal Topics
+    "/perception/walls" [label="/perception/walls\n[racer_interfaces/msg/WallSegmentArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
+    "/perception/debug/walls" [label="/perception/debug/walls\n[visualization_msgs/msg/MarkerArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  }
+
+  // External Topics
+  "/autodrive/roboracer_1/lidar" [label="/autodrive/roboracer_1/lidar\n[sensor_msgs/msg/LaserScan]", shape=ellipse, style=filled, fillcolor=lightgreen];
+
+  // Internal Topic Edges
+  "/perception/wall_extractor" -> "/perception/walls" [label="publishes"];
+  "/perception/wall_extractor" -> "/perception/debug/walls" [label="publishes"];
+
+  // External Topic Edges
+  "/autodrive/roboracer_1/lidar" -> "/perception/wall_extractor" [label="subscribed by"];
+
+}

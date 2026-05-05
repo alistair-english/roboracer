@@ -1,0 +1,45 @@
+parameters:
+    iepf_threshold:
+        type: double
+        default_value: 0.05
+        description: "Max perpendicular deviation (m) from a fitted line before split-and-merge subdivides a run."
+        validation:
+            gt<>: [0.0]
+    min_segment_points:
+        type: int
+        default_value: 3
+        description: "Discard segments supported by fewer than this many lidar returns."
+        validation:
+            gt_eq<>: [2]
+    range_jump_threshold:
+        type: double
+        default_value: 1.0
+        description: "Range delta (m) between adjacent beams that breaks a contiguous run."
+        validation:
+            gt<>: [0.0]
+    debug_marker_lifetime_sec:
+        type: double
+        default_value: 0.2
+        description: "Lifetime of the debug visualization marker so stale segments clear if the node stops."
+        validation:
+            gt<>: [0.0]
+
+subscribers:
+    - topic: scan
+      type: sensor_msgs/msg/LaserScan
+      qos:
+        history: 5
+        reliability: BEST_EFFORT
+
+publishers:
+    - topic: walls
+      type: racer_interfaces/msg/WallSegmentArray
+      qos:
+        history: 5
+        reliability: RELIABLE
+    - topic: debug/walls
+      field_name: debug_walls
+      type: visualization_msgs/msg/MarkerArray
+      qos:
+        history: 5
+        reliability: RELIABLE
