@@ -1,0 +1,75 @@
+parameters:
+    step:
+        type: double
+        default_value: 0.1
+        description: "Distance (m) between successive midline samples along the local tangent."
+        validation:
+            gt<>: [0.0]
+    track_width:
+        type: double
+        default_value: 1.5
+        description: "Known nominal track width (m). Used to place a virtual wall when only one cast hits."
+        validation:
+            gt<>: [0.0]
+    cast_cap:
+        type: double
+        default_value: 2.25
+        description: "Max lateral ray length (m). Casts that exceed this are treated as misses. Default ~1.5 * track_width."
+        validation:
+            gt<>: [0.0]
+    max_midline_length:
+        type: double
+        default_value: 5.0
+        description: "Stop tracing once accumulated midline length exceeds this (m)."
+        validation:
+            gt<>: [0.0]
+    max_iterations:
+        type: int
+        default_value: 100
+        description: "Hard cap on number of midline samples (safety against infinite loops)."
+        validation:
+            gt<>: [1]
+    tangent_ema_alpha:
+        type: double
+        default_value: 0.3
+        description: "EMA weight applied to the raw two-point tangent each step. 1.0 = no smoothing."
+        validation:
+            bounds<>: [0.0, 1.0]
+    miss_terminate_count:
+        type: int
+        default_value: 2
+        description: "Terminate the trace after this many consecutive double-cast misses."
+        validation:
+            gt<>: [0]
+    debug_marker_lifetime_sec:
+        type: double
+        default_value: 0.2
+        description: "Lifetime of debug visualization markers so stale traces clear if the node stops."
+        validation:
+            gt<>: [0.0]
+
+subscribers:
+    - topic: walls
+      type: racer_interfaces/msg/WallSegmentArray
+      qos:
+        history: 5
+        reliability: RELIABLE
+
+publishers:
+    - topic: midline
+      type: racer_interfaces/msg/Midline
+      qos:
+        history: 5
+        reliability: RELIABLE
+    - topic: debug/midline
+      field_name: debug_midline
+      type: visualization_msgs/msg/MarkerArray
+      qos:
+        history: 5
+        reliability: RELIABLE
+    - topic: debug/casts
+      field_name: debug_casts
+      type: visualization_msgs/msg/MarkerArray
+      qos:
+        history: 5
+        reliability: RELIABLE
