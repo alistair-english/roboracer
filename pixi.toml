@@ -75,3 +75,9 @@ _breadcrumb_graph = "breadcrumb src/racer/launch/racer.launch.py -o docs/ros_gra
 _dot_to_svg = "bash -c 'for f in docs/ros_graph/*.dot; do dot -Tsvg \"$f\" -o \"${f%.dot}.svg\"; done'"
 update_ros_graph_diagram = { depends-on = ["_breadcrumb_graph", "_dot_to_svg"] }
 kill_ros = "pkill -9 -f ros || true"
+
+# Docker submission workflow. docker_build tags as :dev (NEVER :practice) so the
+# submission tag is only ever set by the explicit, prompted `submit` task.
+docker_build = "docker build -t roboracer-icra2026:dev ."
+docker_test = { cmd = "bash scripts/docker_test.sh", depends-on = ["docker_build"] }
+submit = "bash scripts/docker_submit.sh"
