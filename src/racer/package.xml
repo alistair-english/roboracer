@@ -15,6 +15,7 @@
   <exec_depend>autodrive_roboracer</exec_depend>
   <exec_depend>perception</exec_depend>
   <exec_depend>control</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

@@ -6,6 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
+        - /TF1
+        - /TF1/Frames1
         - /TF1/Tree1
         - /MarkerArray1/Topic1
       Splitter Ratio: 0.5
@@ -87,59 +89,72 @@ Visualization Manager:
       Enabled: true
       Frame Timeout: 15
       Frames:
-        All Enabled: true
+        All Enabled: false
+        base_link:
+          Value: true
+        chassis:
+          Value: false
         front_camera:
-          Value: true
+          Value: false
         front_left_wheel:
-          Value: true
+          Value: false
         front_right_wheel:
-          Value: true
+          Value: false
         imu:
-          Value: true
+          Value: false
         ips:
-          Value: true
+          Value: false
         left_encoder:
-          Value: true
+          Value: false
         lidar:
-          Value: true
+          Value: false
         rear_left_wheel:
-          Value: true
+          Value: false
         rear_right_wheel:
-          Value: true
+          Value: false
         right_encoder:
-          Value: true
-        roboracer_1:
-          Value: true
-        world:
-          Value: true
+          Value: false
+        spoiler_left_post:
+          Value: false
+        spoiler_right_post:
+          Value: false
+        spoiler_wing:
+          Value: false
       Marker Scale: 1
       Name: TF
       Show Arrows: true
       Show Axes: true
       Show Names: false
       Tree:
-        world:
-          roboracer_1:
-            front_camera:
-              {}
-            front_left_wheel:
-              {}
-            front_right_wheel:
-              {}
-            imu:
-              {}
-            ips:
-              {}
-            left_encoder:
-              {}
-            lidar:
-              {}
-            rear_left_wheel:
-              {}
-            rear_right_wheel:
-              {}
-            right_encoder:
-              {}
+        base_link:
+          chassis:
+            {}
+          front_camera:
+            {}
+          front_left_wheel:
+            {}
+          front_right_wheel:
+            {}
+          imu:
+            {}
+          ips:
+            {}
+          left_encoder:
+            {}
+          lidar:
+            {}
+          rear_left_wheel:
+            {}
+          rear_right_wheel:
+            {}
+          right_encoder:
+            {}
+          spoiler_left_post:
+            {}
+          spoiler_right_post:
+            {}
+          spoiler_wing:
+            {}
       Update Interval: 0
       Value: true
     - Class: rviz_default_plugins/MarkerArray
@@ -158,8 +173,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        cast_hits: true
-        casts: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -171,8 +185,7 @@ Visualization Manager:
       Enabled: true
       Name: MarkerArray
       Namespaces:
-        midline: true
-        midpoints: true
+        {}
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -180,10 +193,108 @@ Visualization Manager:
         Reliability Policy: Reliable
         Value: /perception/debug/midline
       Value: true
+    - Alpha: 1
+      Class: rviz_default_plugins/RobotModel
+      Collision Enabled: false
+      Description File: ""
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /robot_description
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        chassis:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_camera:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_left_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        front_right_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        imu:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        ips:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_encoder:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        lidar:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rear_left_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rear_right_wheel:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_encoder:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        spoiler_left_post:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        spoiler_right_post:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        spoiler_wing:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Mass Properties:
+        Inertia: false
+        Mass: false
+      Name: RobotModel
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: lidar
+    Fixed Frame: base_link
     Frame Rate: 30
   Name: root
   Tools:
@@ -225,7 +336,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -1.5799994468688965
+      Angle: -1.5699998140335083
       Class: rviz_default_plugins/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
@@ -235,11 +346,11 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 107.02409362792969
+      Scale: 286.68914794921875
       Target Frame: <Fixed Frame>
       Value: TopDownOrtho (rviz_default_plugins)
-      X: 0
-      Y: 0
+      X: 0.6839914321899414
+      Y: -0.05596240982413292
     Saved: ~
 Window Geometry:
   Displays:

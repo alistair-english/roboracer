@@ -1,0 +1,223 @@
+<?xml version="1.0"?>
+<!--
+  RoboRacer URDF.
+
+  Frame names and offsets match autodrive_bridge.broadcast_transforms so the
+  visual model lines up with sensor data. The bridge's ground-truth TF is
+  remapped onto /sim/tf in racer.launch.py, so robot_state_publisher owns /tf.
+
+  Vehicle frame `base_link` is at the centre of the rear axle, on the ground.
+  Body dimensions are from the AutoDRIVE 2026 RoboRacer guide; sensor mount
+  poses are from autodrive_bridge.broadcast_transforms.
+-->
+<robot name="roboracer">
+
+  <material name="chassis_blue"><color rgba="0.10 0.20 0.85 1.0"/></material>
+  <material name="wheel_black"><color rgba="0.05 0.05 0.05 1.0"/></material>
+  <material name="sensor_grey"><color rgba="0.25 0.25 0.25 1.0"/></material>
+  <material name="lidar_yellow"><color rgba="0.90 0.80 0.10 1.0"/></material>
+
+  <!-- Root frame: centre of rear axle, on the ground. -->
+  <link name="base_link"/>
+
+  <!--
+    Chassis visual. Vehicle is 0.500 m long, 0.270 m wide. With wheelbase
+    0.324 m, front overhang 0.090 m, rear overhang 0.080 m, the body spans
+    x = -0.080 .. +0.414. Box centre is at x = 0.167. Body is a thin slab
+    (0.040 m tall) so the lidar puck and camera sit proud of it.
+  -->
+  <link name="chassis">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.494 0.160 0.040"/></geometry>
+      <material name="chassis_blue"/>
+    </visual>
+  </link>
+  <joint name="chassis_to_base" type="fixed">
+    <parent link="base_link"/>
+    <child link="chassis"/>
+    <origin xyz="0.167 0 0.079" rpy="0 0 0"/>
+  </joint>
+
+  <!--
+    Rear spoiler: two uprights and a wing across the top. Sits just inside
+    the rear bumper (chassis top is at z = 0.099; uprights are 0.060 m tall;
+    wing is 0.010 m thick).
+  -->
+  <link name="spoiler_left_post">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.020 0.018 0.060"/></geometry>
+      <material name="chassis_blue"/>
+    </visual>
+  </link>
+  <joint name="spoiler_left_post_mount" type="fixed">
+    <parent link="base_link"/>
+    <child link="spoiler_left_post"/>
+    <origin xyz="-0.055 0.060 0.129" rpy="0 0 0"/>
+  </joint>
+
+  <link name="spoiler_right_post">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.020 0.018 0.060"/></geometry>
+      <material name="chassis_blue"/>
+    </visual>
+  </link>
+  <joint name="spoiler_right_post_mount" type="fixed">
+    <parent link="base_link"/>
+    <child link="spoiler_right_post"/>
+    <origin xyz="-0.055 -0.060 0.129" rpy="0 0 0"/>
+  </joint>
+
+  <link name="spoiler_wing">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.090 0.180 0.010"/></geometry>
+      <material name="chassis_blue"/>
+    </visual>
+  </link>
+  <joint name="spoiler_wing_mount" type="fixed">
+    <parent link="base_link"/>
+    <child link="spoiler_wing"/>
+    <origin xyz="-0.055 0.0 0.164" rpy="0 0 0"/>
+  </joint>
+
+  <!--
+    Wheels. Radius 0.0590 m, width 0.0450 m. Cylinder default axis is Z, so
+    rotate 90 deg about X to spin around Y (roll axis of car is X-forward).
+    Bridge places wheels at |y| = 0.118 (track 0.236 m), front axle at x=0.33
+    (matches the spec's 0.324 m wheelbase to within 6 mm; we follow the
+    bridge so the visual lines up with the published TF tree).
+  -->
+  <link name="front_left_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+      <geometry><cylinder radius="0.0590" length="0.0450"/></geometry>
+      <material name="wheel_black"/>
+    </visual>
+  </link>
+  <joint name="front_left_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="front_left_wheel"/>
+    <origin xyz="0.33 0.118 0.0590" rpy="0 0 0"/>
+  </joint>
+
+  <link name="front_right_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+      <geometry><cylinder radius="0.0590" length="0.0450"/></geometry>
+      <material name="wheel_black"/>
+    </visual>
+  </link>
+  <joint name="front_right_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="front_right_wheel"/>
+    <origin xyz="0.33 -0.118 0.0590" rpy="0 0 0"/>
+  </joint>
+
+  <link name="rear_left_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+      <geometry><cylinder radius="0.0590" length="0.0450"/></geometry>
+      <material name="wheel_black"/>
+    </visual>
+  </link>
+  <joint name="rear_left_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rear_left_wheel"/>
+    <origin xyz="0.0 0.118 0.0590" rpy="0 0 0"/>
+  </joint>
+
+  <link name="rear_right_wheel">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+      <geometry><cylinder radius="0.0590" length="0.0450"/></geometry>
+      <material name="wheel_black"/>
+    </visual>
+  </link>
+  <joint name="rear_right_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="rear_right_wheel"/>
+    <origin xyz="0.0 -0.118 0.0590" rpy="0 0 0"/>
+  </joint>
+
+  <!-- LIDAR: Hokuyo-style puck on top of chassis, 270 deg FOV, 10 m range. -->
+  <link name="lidar">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><cylinder radius="0.035" length="0.040"/></geometry>
+      <material name="lidar_yellow"/>
+    </visual>
+  </link>
+  <joint name="lidar_mount" type="fixed">
+    <parent link="base_link"/>
+    <child link="lidar"/>
+    <origin xyz="0.2733 0.0 0.096" rpy="0 0 0"/>
+  </joint>
+
+  <!--
+    Front camera: pitched 10 deg downward (positive pitch in the ROS REP-103
+    sense, matching the quaternion [0, 0.0871557, 0, 0.9961947] published by
+    the bridge).
+  -->
+  <link name="front_camera">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.025 0.080 0.025"/></geometry>
+      <material name="sensor_grey"/>
+    </visual>
+  </link>
+  <joint name="front_camera_mount" type="fixed">
+    <parent link="base_link"/>
+    <child link="front_camera"/>
+    <origin xyz="-0.015 0.0 0.15" rpy="0 0.1745329 0"/>
+  </joint>
+
+  <!-- IPS and IMU are co-located on the centre stack. -->
+  <link name="ips">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.020 0.020 0.010"/></geometry>
+      <material name="sensor_grey"/>
+    </visual>
+  </link>
+  <joint name="ips_mount" type="fixed">
+    <parent link="base_link"/>
+    <child link="ips"/>
+    <origin xyz="0.08 0.0 0.055" rpy="0 0 0"/>
+  </joint>
+
+  <link name="imu">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry><box size="0.020 0.020 0.010"/></geometry>
+      <material name="sensor_grey"/>
+    </visual>
+  </link>
+  <joint name="imu_mount" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu"/>
+    <origin xyz="0.08 0.0 0.055" rpy="0 0 0"/>
+  </joint>
+
+  <!--
+    Wheel encoder frames. The bridge publishes them at z=0 (ground level)
+    which would clip through the wheels visually, so the links are kept for
+    TF only — no visual geometry.
+  -->
+  <link name="left_encoder"/>
+  <joint name="left_encoder_mount" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_encoder"/>
+    <origin xyz="0.0 0.12 0.0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="right_encoder"/>
+  <joint name="right_encoder_mount" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_encoder"/>
+    <origin xyz="0.0 -0.12 0.0" rpy="0 0 0"/>
+  </joint>
+
+</robot>
