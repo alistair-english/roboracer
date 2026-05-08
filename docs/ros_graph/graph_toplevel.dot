@@ -8,6 +8,17 @@ digraph ROS2TopLevel {
     fillcolor=lightgrey;
 
     "perception" [label="perception\n(1 node)", style=filled, fillcolor=lightblue];
+    "/perception/walls" [label="/perception/walls\n[racer_interfaces/msg/WallSegmentArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  }
+
+  subgraph cluster_control {
+    label="control";
+    style=filled;
+    fillcolor=lightgrey;
+
+    "control" [label="control\n(1 node)", style=filled, fillcolor=lightblue];
+    "/autodrive/roboracer_1/throttle_command" [label="/autodrive/roboracer_1/throttle_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+    "/autodrive/roboracer_1/steering_command" [label="/autodrive/roboracer_1/steering_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
   }
 
   // Root Namespace Nodes
@@ -30,8 +41,6 @@ digraph ROS2TopLevel {
   "/autodrive/roboracer_1/last_lap_time" [label="/autodrive/roboracer_1/last_lap_time\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
   "/autodrive/roboracer_1/best_lap_time" [label="/autodrive/roboracer_1/best_lap_time\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
   "/autodrive/roboracer_1/collision_count" [label="/autodrive/roboracer_1/collision_count\n[std_msgs/msg/Int32]", shape=ellipse, style=filled, fillcolor=lightgreen];
-  "/autodrive/roboracer_1/throttle_command" [label="/autodrive/roboracer_1/throttle_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
-  "/autodrive/roboracer_1/steering_command" [label="/autodrive/roboracer_1/steering_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
   "/autodrive/reset_command" [label="/autodrive/reset_command\n[std_msgs/msg/Bool]", shape=ellipse, style=filled, fillcolor=lightgreen];
 
   // Topic Edges
@@ -50,9 +59,13 @@ digraph ROS2TopLevel {
   "/autodrive_bridge" -> "/autodrive/roboracer_1/last_lap_time" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/best_lap_time" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/collision_count" [label="publishes"];
+  "control" -> "/autodrive/roboracer_1/throttle_command" [label="publishes"];
   "/autodrive/roboracer_1/throttle_command" -> "/autodrive_bridge" [label="subscribed by"];
+  "control" -> "/autodrive/roboracer_1/steering_command" [label="publishes"];
   "/autodrive/roboracer_1/steering_command" -> "/autodrive_bridge" [label="subscribed by"];
   "/autodrive/reset_command" -> "/autodrive_bridge" [label="subscribed by"];
+  "perception" -> "/perception/walls" [label="publishes"];
+  "/perception/walls" -> "control" [label="subscribed by"];
 
   // Service Edges
 

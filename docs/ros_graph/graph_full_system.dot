@@ -36,9 +36,19 @@ digraph ROS2Graph {
     "/perception/debug/walls" [label="/perception/debug/walls\n[visualization_msgs/msg/MarkerArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
   }
 
+  subgraph cluster__control_tentacles {
+    label="/control/tentacles";
+    style=filled;
+    fillcolor=lightgrey;
+
+    "/control/tentacles" [label="/control/tentacles\n(control)", style=filled, fillcolor=lightblue];
+    "/autodrive/roboracer_1/throttle_command" [label="/autodrive/roboracer_1/throttle_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+    "/autodrive/roboracer_1/steering_command" [label="/autodrive/roboracer_1/steering_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+    "/control/debug/tentacles" [label="/control/debug/tentacles\n[visualization_msgs/msg/MarkerArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
+    "/control/debug/selected" [label="/control/debug/selected\n[visualization_msgs/msg/MarkerArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  }
+
   // Shared Topics
-  "/autodrive/roboracer_1/throttle_command" [label="/autodrive/roboracer_1/throttle_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
-  "/autodrive/roboracer_1/steering_command" [label="/autodrive/roboracer_1/steering_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
   "/autodrive/reset_command" [label="/autodrive/reset_command\n[std_msgs/msg/Bool]", shape=ellipse, style=filled, fillcolor=lightgreen];
 
   // Topic Edges
@@ -57,11 +67,16 @@ digraph ROS2Graph {
   "/autodrive_bridge" -> "/autodrive/roboracer_1/last_lap_time" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/best_lap_time" [label="publishes"];
   "/autodrive_bridge" -> "/autodrive/roboracer_1/collision_count" [label="publishes"];
+  "/control/tentacles" -> "/autodrive/roboracer_1/throttle_command" [label="publishes"];
   "/autodrive/roboracer_1/throttle_command" -> "/autodrive_bridge" [label="subscribed by"];
+  "/control/tentacles" -> "/autodrive/roboracer_1/steering_command" [label="publishes"];
   "/autodrive/roboracer_1/steering_command" -> "/autodrive_bridge" [label="subscribed by"];
   "/autodrive/reset_command" -> "/autodrive_bridge" [label="subscribed by"];
   "/perception/wall_extractor" -> "/perception/walls" [label="publishes"];
+  "/perception/walls" -> "/control/tentacles" [label="subscribed by"];
   "/perception/wall_extractor" -> "/perception/debug/walls" [label="publishes"];
+  "/control/tentacles" -> "/control/debug/tentacles" [label="publishes"];
+  "/control/tentacles" -> "/control/debug/selected" [label="publishes"];
 
   // Service Edges
 

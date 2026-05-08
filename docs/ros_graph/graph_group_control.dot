@@ -1,0 +1,34 @@
+digraph ROS2Group_control {
+  rankdir=LR;
+  node [shape=box];
+  label="Group: control";
+  labelloc=t;
+
+  subgraph cluster_control {
+    label="control";
+    style=filled;
+    fillcolor=lightgrey;
+
+    // Group Nodes
+    "/control/tentacles" [label="/control/tentacles\n(control)", style=filled, fillcolor=lightblue];
+
+    // Internal Topics
+    "/control/debug/tentacles" [label="/control/debug/tentacles\n[visualization_msgs/msg/MarkerArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
+    "/control/debug/selected" [label="/control/debug/selected\n[visualization_msgs/msg/MarkerArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  }
+
+  // External Topics
+  "/autodrive/roboracer_1/throttle_command" [label="/autodrive/roboracer_1/throttle_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/autodrive/roboracer_1/steering_command" [label="/autodrive/roboracer_1/steering_command\n[std_msgs/msg/Float32]", shape=ellipse, style=filled, fillcolor=lightgreen];
+  "/perception/walls" [label="/perception/walls\n[racer_interfaces/msg/WallSegmentArray]", shape=ellipse, style=filled, fillcolor=lightgreen];
+
+  // Internal Topic Edges
+  "/control/tentacles" -> "/control/debug/tentacles" [label="publishes"];
+  "/control/tentacles" -> "/control/debug/selected" [label="publishes"];
+
+  // External Topic Edges
+  "/control/tentacles" -> "/autodrive/roboracer_1/throttle_command" [label="publishes"];
+  "/control/tentacles" -> "/autodrive/roboracer_1/steering_command" [label="publishes"];
+  "/perception/walls" -> "/control/tentacles" [label="subscribed by"];
+
+}
