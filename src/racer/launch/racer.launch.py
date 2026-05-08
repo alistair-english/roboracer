@@ -40,6 +40,25 @@ def generate_launch_description():
             remappings={"scan": "/autodrive/roboracer_1/lidar"},
         )
 
+    with l.namespace("localization"):
+        l.node(
+            package="localization",
+            executable="wheel_odometry",
+            remappings={
+                "left_encoder": "/autodrive/roboracer_1/left_encoder",
+                "right_encoder": "/autodrive/roboracer_1/right_encoder",
+                "twist": "wheel_odometry/twist",
+            },
+        )
+
+        # robot_localization fuses wheel twist + IMU yaw rate -> odom -> base_link.
+        l.node(
+            package="robot_localization",
+            executable="ekf_node",
+            name="ekf_filter_node",
+            parameters_file=cw.pkg_file("localization", "config", "ekf.yaml"),
+        )
+
     with l.namespace("control"):
         l.node(
             package="control",

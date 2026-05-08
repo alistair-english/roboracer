@@ -1,0 +1,72 @@
+# robot_localization EKF for the racer.
+#
+# Inputs:
+#   - twist0: wheel-encoder forward speed (vx) from localization::wheel_odometry,
+#             expressed in base_link.
+#   - imu0:   sim IMU. We only fuse yaw rate (vyaw); orientation comes from the
+#             integrator + SLAM corrections, not the absolute IMU frame.
+#
+# Output:
+#   - /odometry/filtered (nav_msgs/Odometry, frame_id=odom, child=base_link)
+#   - TF: odom -> base_link (publish_tf=true)
+#
+# We deliberately do NOT fuse linear acceleration or pose -- the simulator's
+# ground-truth-derived absolute pose isn't allowed at race time, and the
+# acceleration channel is noisy enough on a small RC car that the integrated
+# velocity is worse than the encoder velocity.
+/**:
+    ros__parameters:
+        frequency: 50.0
+        sensor_timeout: 0.2
+        two_d_mode: true
+        publish_tf: true
+        publish_acceleration: false
+        reset_on_time_jump: true
+
+        map_frame: map
+        odom_frame: odom
+        base_link_frame: base_link
+        world_frame: odom
+
+        # Wheel-encoder twist. Order: x, y, z, roll, pitch, yaw, vx, vy, vz,
+        # vroll, vpitch, vyaw, ax, ay, az. Only vx is observable.
+        twist0: /localization/wheel_odometry/twist
+        twist0_config: [false, false, false,
+                                        false, false, false,
+                                        true,  false, false,
+                                        false, false, false,
+                                        false, false, false]
+        twist0_queue_size: 10
+        twist0_differential: false
+        twist0_relative: false
+
+        # IMU. Take yaw rate (vyaw) only; ignore absolute orientation (sim frame
+        # leak) and linear acceleration (too noisy for our state size).
+        imu0: /autodrive/roboracer_1/imu
+        imu0_config: [false, false, false,
+                                    false, false, false,
+                                    false, false, false,
+                                    false, false, true,
+                                    false, false, false]
+        imu0_queue_size: 10
+        imu0_differential: false
+        imu0_relative: false
+        imu0_remove_gravitational_acceleration: true
+
+        # 15x15 process noise diagonal (x,y,z, r,p,y, vx,vy,vz, vr,vp,vy, ax,ay,az).
+        # Tuned for a small RC car that can change yaw quickly. Off-diagonals 0.
+        process_noise_covariance: [0.05, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.05, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.06, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.03, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.03, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.0,  0.06, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.025,0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.025,0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.04, 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.01, 0.0,  0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.01, 0.0,  0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.02, 0.0,  0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.01, 0.0,  0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.01, 0.0,
+                                                             0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.015]

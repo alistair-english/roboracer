@@ -1,0 +1,47 @@
+parameters:
+    wheel_radius:
+        type: double
+        default_value: 0.0590
+        description: "Rear wheel radius (m). RoboRacer 2026 spec."
+        validation:
+            gt<>: [0.0]
+    linear_x_variance:
+        type: double
+        default_value: 0.01
+        description: "Variance (m^2/s^2) reported on the published forward-speed measurement. Drives EKF trust."
+        validation:
+            gt<>: [0.0]
+    min_dt_sec:
+        type: double
+        default_value: 0.001
+        description: "Discard samples that arrive closer in time than this; differentiating across them is unstable."
+        validation:
+            gt<>: [0.0]
+    base_frame:
+        type: string
+        default_value: "base_link"
+        description: "Frame the published twist is expressed in. Should match robot_localization's base_link_frame."
+
+subscribers:
+    - name: encoders
+      policy: approximate
+      queue_size: 10
+      max_interval: 0.05
+      topics:
+        - topic: left_encoder
+          type: sensor_msgs/msg/JointState
+          qos:
+            history: 5
+            reliability: RELIABLE
+        - topic: right_encoder
+          type: sensor_msgs/msg/JointState
+          qos:
+            history: 5
+            reliability: RELIABLE
+
+publishers:
+    - topic: twist
+      type: geometry_msgs/msg/TwistWithCovarianceStamped
+      qos:
+        history: 5
+        reliability: RELIABLE

@@ -158,27 +158,74 @@ def parse_packages() -> tuple[set[str], set[str]]:
     return internal_names, external_deps
 
 
+def existing_pins() -> set[str]:
+    """Return the set of package names (lowercased) already pinned in pixi.toml.
+
+    Honours `[dependencies]` and `[pypi-dependencies]` outside the auto-gen
+    markers so a manual pin (e.g. Flask==1.1.1) takes precedence -- the regen
+    just skips that name and leaves the human-authored pin alone.
+    """
+    if not PIXI_TOML.is_file():
+        return set()
+
+    content = PIXI_TOML.read_text()
+    begin_marker = "# --- BEGIN AUTO-GENERATED DEPS (do not edit manually) ---"
+    end_marker = "# --- END AUTO-GENERATED DEPS ---"
+    begin_idx = content.find(begin_marker)
+    end_idx = content.find(end_marker)
+    if begin_idx != -1 and end_idx != -1:
+        content = content[:begin_idx] + content[end_idx + len(end_marker):]
+
+    pins: set[str] = set()
+    section: str | None = None
+    for raw in content.splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("[") and line.endswith("]"):
+            section = line[1:-1].strip()
+            continue
+        if section not in {"dependencies", "pypi-dependencies"}:
+            continue
+        name, _, _ = line.partition("=")
+        name = name.strip().strip('"').strip("'")
+        if name:
+            pins.add(name.lower())
+    return pins
+
+
 def classify_deps(deps: set[str]) -> tuple[list[str], list[str], list[str]]:
     """Classify deps into (ros_pkgs, system_pkgs, python_pkgs) as conda-forge names."""
     ros_pkgs: list[str] = []
     system_pkgs: list[str] = []
     python_pkgs: list[str] = []
+    pins = existing_pins()
+
+    def already_pinned(name: str) -> bool:
+        return name.lower() in pins
 
     for dep in deps:
         if dep in IGNORED_DEPS:
             continue
         elif dep in PYTHON_DEP_MAP:
-            python_pkgs.append(PYTHON_DEP_MAP[dep])
+            conda_name = PYTHON_DEP_MAP[dep]
+            if already_pinned(conda_name):
+                continue
+            python_pkgs.append(conda_name)
         elif dep in SYSTEM_DEP_MAP:
             conda_name = SYSTEM_DEP_MAP[dep]
-            if conda_name is not None:
-                system_pkgs.append(conda_name)
+            if conda_name is None or already_pinned(conda_name):
+                continue
+            system_pkgs.append(conda_name)
         else:
             # ROS package: underscore -> hyphen, prefixed with ros-humble-
             ros_name = dep.replace("_", "-")
             if ros_name in DROPPED_ROS_DEPS:
                 continue
-            ros_pkgs.append(f"ros-humble-{ros_name}")
+            ros_pkg = f"ros-humble-{ros_name}"
+            if already_pinned(ros_pkg):
+                continue
+            ros_pkgs.append(ros_pkg)
 
     ros_pkgs = sorted(set(ros_pkgs))
     system_pkgs = sorted(set(system_pkgs))
